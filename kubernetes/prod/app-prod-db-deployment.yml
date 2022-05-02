@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-db-deployment
+  labels:
+    username: app
+    env: prod
+    app: app-prod-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-prod-db
+  template:
+    metadata:
+      labels:
+        app: app-prod-db
+    spec:
+      containers:
+        - name: app-prod-db
+          image: redis:6
+          ports:
+          - name: http
+            containerPort: 6379
+          volumeMounts:
+            - name: app-data
+              mountPath: "/data"
+      volumes:
+      - name: app-data
+        persistentVolumeClaim:
+          claimName: app-data
