@@ -4,7 +4,6 @@ kind: Deployment
 metadata:
   name: app-api-deployment
   labels:
-    username: app
     env: prod
     app: app-prod-api
 spec:
