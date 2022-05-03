@@ -20,7 +20,7 @@ spec:
       containers:
         - name: app-prod-api
           imagePullPolicy: Always
-          image: nikhilsharma710/hw05:1.0. #change hw05
+          image: nikhilsharma710/hw05:1.0  #change hw05
           command: ['python3', 'flask_api.py']
           ports:
           - name: http
