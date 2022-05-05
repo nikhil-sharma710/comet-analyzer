@@ -5,12 +5,12 @@ RUN yum update -y && \
 
 RUN pip3 install Flask==2.0.3 \
                  pytest==7.0.0 \
-                 xmltodict==0.12.0
+                 json==0.12.0       #library?
 
-COPY flask_api.py /code/flask_api.py
-COPY test_flask.py /code/test_flask.py
-COPY comet_data.json /code/comet_data.json
+COPY flask_api.py /data/flask_api.py
+COPY test_flask.py /data/test_flask.py
+COPY comet_data.json /data/comet_data.json
 
-WORKDIR /code/
+WORKDIR /data/
 
-CMD ["python3", "/code/flask_api.py"]
+CMD ["python3", "/data/flask_api.py"]
