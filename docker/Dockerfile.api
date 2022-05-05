@@ -1,0 +1,16 @@
+FROM centos:7.9.2009
+
+RUN yum update -y && \
+    yum install -y python3
+
+RUN pip3 install Flask==2.0.3 \
+                 pytest==7.0.0 \
+                 xmltodict==0.12.0
+
+COPY flask_api.py /code/flask_api.py
+COPY test_flask.py /code/test_flask.py
+COPY comet_data.json /code/comet_data.json
+
+WORKDIR /code/
+
+CMD ["python3", "/code/flask_api.py"]
