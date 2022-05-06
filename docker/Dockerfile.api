@@ -9,7 +9,7 @@ RUN pip3 install Flask==2.0.3 \
 
 COPY flask_api.py /data/flask_api.py
 COPY test_flask.py /data/test_flask.py
-COPY comet_data.json /data/comet_data.json
+COPY comets_data.json /data/comets_data.json
 
 WORKDIR /data/
 
