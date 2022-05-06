@@ -2,7 +2,11 @@ from flask import Flask, jsonify, request
 import logging
 import json
 
+logging.basicConfig(level=logging.DEBUG)
+
+redis_ip = os.environ.get('REDIS_IP')
 app = Flask(__name__)
+rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
 # comets_data = {}
 
@@ -68,6 +72,7 @@ def get_comets():
 @app.route('/comets/<comet>', methods=['GET'])
 def get_comet_info(comet):
     """
+
     """
 
     logging.info('Querying route to get all info on /' + comet)
@@ -85,6 +90,5 @@ def get_comet_info(comet):
             comet_list.append(comet_dict)
     return json.dumps(comet_list, indent=2)
 
-# the next statement should usually appear at the bottom of a flask app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
