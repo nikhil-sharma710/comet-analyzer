@@ -4,9 +4,9 @@ import json
 
 logging.basicConfig(level=logging.DEBUG)
 
-redis_ip = os.environ.get('REDIS_IP')
+# redis_ip = os.environ.get('REDIS_IP')
 app = Flask(__name__)
-rd = redis.Redis(host=redis_ip, port=6379, db=0)
+# rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
 # comets_data = {}
 
