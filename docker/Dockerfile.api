@@ -1,16 +1,13 @@
-FROM centos:7.9.2009
+FROM python:3.9
 
-RUN yum update -y && \
-    yum install -y python3
+RUN mkdir /app
+WORKDIR /app 
 
-RUN pip3 install Flask==2.0.3 \
-                 pytest==7.0.0 \
-                 json==0.12.0
+RUN pip install --user Flask==2.0.3
 
-COPY flask_api.py /data/flask_api.py
-COPY test_flask.py /data/test_flask.py
-COPY comets_data.json /data/comets_data.json
+RUN pip install redis
 
-WORKDIR /data/
+COPY . /app
 
-CMD ["python3", "/data/flask_api.py"]
+ENTRYPOINT ["python"]
+CMD ["flask_api.py"]
