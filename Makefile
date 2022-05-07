@@ -3,7 +3,6 @@ APP ?= app
 VER ?= 0.1
 FPORT ?= 5029
 RPORT ?= 6429
-# RIP ?= 10.96.6.150
 
 im-me:
 	- docker images | grep ${NAME}
