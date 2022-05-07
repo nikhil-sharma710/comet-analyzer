@@ -27,7 +27,7 @@ build-wrk:
 
 
 run-api:
-	RIP=$$(docker inspect ${NAME}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
+	RIP=$$(docker inspect ${NAME}-${APP}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
 	docker run -p ${FPORT}:5000 \
                    --name ${NAME}-${APP}_api \
                    -d \
@@ -43,7 +43,7 @@ run-db:
                    --save 1 1
 
 run-wrk:
-	RIP=$$(docker inspect ${NAME}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
+	RIP=$$(docker inspect ${NAME}-${APP}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
 	docker run --name ${NAME}-${APP}-wrk \
                    --env REDIS_IP=${RIP} \
                    -d \
