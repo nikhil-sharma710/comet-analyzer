@@ -3,11 +3,11 @@ FROM python:3.9
 RUN mkdir /app
 WORKDIR /app 
 
-RUN pip install --user Flask==2.0.3
+RUN pip3 install --user Flask==2.0.3
+RUN pip3 install --user redis
+RUN pip3 instlal --user hotqueue
 
-RUN pip install redis
+COPY ./src/* /app/
 
-COPY /src/flask_api.py /app
-
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 CMD ["flask_api.py"]

@@ -3,15 +3,16 @@ import logging
 import json
 import redis
 import os
+from jobs import rd, q, add_job, get_job_by_id
 
 logging.basicConfig(level=logging.DEBUG)
 
-redis_ip = os.environ.get('REDIS_IP')
-if not redis_ip:
-    raise Exception()
+# redis_ip = os.environ.get('REDIS_IP')
+# if not redis_ip:
+#    raise Exception()
 
 app = Flask(__name__)
-rd = redis.Redis(host=redis_ip, port=6379, db=0)
+# rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
 # comets_data = {}
 
@@ -27,6 +28,9 @@ def read_data_from_file() -> str:
     global comets_data
 
     if request.method == 'POST':
+
+        rd.flushdb()
+
         with open('comets_data.json', 'r') as f:
             comets_data = json.load(f)
 
@@ -35,13 +39,36 @@ def read_data_from_file() -> str:
 
         return f'Data has been read from file\n'
 
-    else:
+    elif request.method == 'GET':
         comet_empty_list = []
         for item in rd.keys():
             comet_empty_list.append(json.loads(rd.get(item).decode('utf-8')))
   
         return json.dumps(comet_empty_list, indent=2)
 
+    elif request.method == 'DELETE':
+        rd.flushdb()
+        return 'All data in redis container db = 0 has been deleted\n'
+
+@app.route('/jobs', methods=['POST', 'GET'])
+def jobs_api():
+    """
+    API route for creating a new job to do some analysis. This route accepts a JSON payload
+    describing the job to be created.
+    """
+    if request.method == 'POST':
+        try:
+            job = request.get_json(force=True)
+        except Exception as e:
+            return json.dumps({'status': "Error", 'message': 'Invalid JSON: {}.'.format(e)})
+    
+        return json.dumps(add_job(job['start'], job['end']), indent=2) + '\n'
+
+    elif request.method == 'GET':
+        return """
+  To submit a job, do the following:
+  curl localhost:5041/jobs -X POST -d '{"start":1, "end":2}' -H "Content-Type: application/json"
+"""
 
         
 
@@ -72,17 +99,6 @@ def info() -> str:
     return describe
 
 
-@app.route('/display_data', methods=['GET'])
-def display_data() -> str:
-    """
-
-    """
-
-    logging.info('Querying route to display data')
-
-    return json.dumps(comets_data, indent=2)
-
-
 	
 @app.route('/comets', methods=['GET'])
 def get_comets() -> str:
@@ -93,8 +109,8 @@ def get_comets() -> str:
     logging.info('Querying route to get all comets')
 
     comets_names = []
-    for item in comets_data:
-        comets_names.append(item['object'])
+    for item in rd.keys():
+        comets_names.append(rd.get(item, 'object')
 
     return json.dumps(comets_names, indent=2)
 
@@ -120,6 +136,20 @@ def get_comet_info(comet) -> str:
     return json.dumps(comet_list, indent=2)
 
 
+
+
+@app.route('aphelion/<au>', methods=['GET'])
+def far_comets(au: float):
+    """
+    returns comets above some given distance in AU units
+    """
+
+    aph_list = []
+    for item in rd.keys():
+        if float(rd.get(item, 'q_au_2')) >= float(au):
+            aph_list.append('[Object ' + rd.get(item, 'object') + ']: ', rd.get(item, 'q_au_2'))
+    
+    return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
 
 
 
