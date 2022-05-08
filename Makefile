@@ -1,8 +1,8 @@
-NAME ?= "nikhilsharma710"
-APP ?= "app"
-VER ?= "0.1"
-FPORT ?= "5029"
-RPORT ?= "6429"
+NAME ?= nikhilsharma710
+APP ?= app
+VER ?= 0.1
+FPORT ?= 5029
+RPORT ?= 6429
 
 im-me:
 	- docker images | grep ${NAME}
@@ -28,13 +28,13 @@ build-wrk:
 run-api:
 	RIP=$$(docker inspect ${NAME}-${APP}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
 	docker run -p ${FPORT}:5000 \
-                   --name ${NAME}-${APP}_api \
+                   --name ${NAME}-${APP}-api \
                    -d \
                    --env REDIS_IP=${RIP} \
                    ${NAME}/${APP}:${VER}
 
 run-db:
-	docker run --name ${NAME}-db \
+	docker run --name ${NAME}-${APP}-db \
 		   -p ${RPORT}:6379 \
                    -v $(pwd)/data:/data:rw \
                    -d \
@@ -66,12 +66,12 @@ push-wrk:
 
 
 
-cycle-api: clean-api build-api run-api
+build-all: build-db build-api build-wrk
 
-cycle-db: clean-db build-db run-db
+run-all: run-db run-api run-wrk
 
-cycle-wrk: clean-wrk build-wrk run-wrk
+clean-all: clean-db clean-api clean-wrk
 
 push-all: push-api push-wrk
 
-all: cycle-api cycle-db cycle-wrk
+all: clean-all build-all run-all
