@@ -11,6 +11,12 @@ ps-me:
 	- docker ps -a | grep ${NAME}
 
 
+list:
+	- docker images | grep ${NAME}
+	- docker ps -a | grep ${NAME} 
+
+
+
 build-api:
 	docker build -t ${NAME}/${APP}-api:${VER} \
                      -f docker/Dockerfile.api \
