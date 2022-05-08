@@ -7,7 +7,7 @@ RUN pip install --user Flask==2.0.3
 
 RUN pip install redis
 
-COPY . /app
+COPY /src/flask_api.py /app
 
 ENTRYPOINT ["python"]
 CMD ["flask_api.py"]
