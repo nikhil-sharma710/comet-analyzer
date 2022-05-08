@@ -1,11 +1,9 @@
----
+--
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-wrk-deployment
   labels:
-    username: app
-    env: prod
     app: app-prod-wrk
 spec:
   replicas: 2
@@ -20,11 +18,11 @@ spec:
       containers:
         - name: app-prod-wrk
           imagePullPolicy: Always
-          image: nikhilsharma710/hw05:1.0  #change image
+          image: nikhilsharma710/app-wrk:1.0
           command: ['python3', 'worker.py']
+          env:
+          - name: REDIS_IP
+            value: 10.96.6.150
           ports:
           - name: http
             containerPort: 5000
-          env:
-          - name: REDIS_IP  #change
-            value: 10.96.56.194 

@@ -19,11 +19,11 @@ spec:
       containers:
         - name: app-prod-api
           imagePullPolicy: Always
-          image: nikhilsharma710/endgame:1.0
+          image: nikhilsharma710/app-api:1.0
           command: ['python3', 'flask_api.py']
-          ports:
-          - name: http
-            containerPort: 5000
           env:
           - name: REDIS_IP
             value: 10.96.6.150
+          ports:
+          - name: http
+            containerPort: 5000
