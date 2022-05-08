@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, request
 import logging
 import json
+import redis
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 
-# redis_ip = os.environ.get('REDIS_IP')
+redis_ip = os.environ.get('REDIS_IP')
 app = Flask(__name__)
-# rd = redis.Redis(host=redis_ip, port=6379, db=0)
+rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
 # comets_data = {}
 
@@ -23,6 +25,9 @@ def read_data_from_file() -> str:
 
     with open('comets_data.json', 'r') as f:
         comets_data = json.load(f)
+
+    for item in range(len(comets_data)):
+        rd.set(str(i), json.dumps(comets_data[item]))
 
 
     return f'Data has been read from file\n'
