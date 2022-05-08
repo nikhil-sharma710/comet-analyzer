@@ -13,7 +13,7 @@ rd = redis.Redis(host=redis_ip, port=6379, db=0)
 # comets_data = {}
 
 
-@app.route('/read_data', methods=['POST'])
+@app.route('/read_data', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def read_data_from_file() -> str:
     """
     
@@ -23,14 +23,21 @@ def read_data_from_file() -> str:
 
     global comets_data
 
-    with open('comets_data.json', 'r') as f:
-        comets_data = json.load(f)
+    if request.method == 'POST':
+        with open('comets_data.json', 'r') as f:
+            comets_data = json.load(f)
 
-    for item in range(len(comets_data)):
-        rd.set(str(i), json.dumps(comets_data[item]))
+        for item in range(len(comets_data)):
+            rd.set(str(i), json.dumps(comets_data[item]))
 
+        return f'Data has been read from file\n'
 
-    return f'Data has been read from file\n'
+    else:
+        comet_empty_list = []
+        for item in rd.keys():
+            comet_empty_list.append(json.loads(rd.get(i).decode('utf-8')))
+  
+        return json.dumps(comet_empty_list, indent=2)
 
 
 @app.route('/symbols', methods=['GET'])
@@ -71,7 +78,7 @@ def display_data() -> str:
     return json.dumps(comets_data, indent=2)
 
 
-
+	
 @app.route('/comets', methods=['GET'])
 def get_comets() -> str:
     """
