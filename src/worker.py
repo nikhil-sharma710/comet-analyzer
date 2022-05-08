@@ -1,7 +1,10 @@
-import redis
-from hotqueue import HotQueue
+from jobs import q, update_job_status
+import time
 
-redis_ip = os.environ.get('REDIS_IP')
+@q.worker
+def execute_job(jid):
+    update_job_status(jid, 'in progress')
+    time.sleep(15)
+    update_job_status(jid, 'complete')
 
-rd = redis.Redis(host=redis_ip, port=6379, db=0)
-q = HotQueue("queue", host=redis_ip, port=6379, db=1)
+execute_job()
