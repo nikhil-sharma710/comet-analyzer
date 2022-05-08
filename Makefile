@@ -31,7 +31,7 @@ run-api:
                    --name ${NAME}-${APP}-api \
                    -d \
                    --env REDIS_IP=${RIP} \
-                   ${NAME}/${APP}:${VER}
+                   ${NAME}/${APP}-api:${VER}
 
 run-db:
 	docker run --name ${NAME}-${APP}-db \
@@ -64,6 +64,12 @@ push-api:
 push-wrk:
 	docker push ${NAME}/${APP]-wrk:${VER}
 
+
+pull-api:
+	docker pull ${NAME}/${APP}-api:${VER}
+
+pull-wrk:
+	docker pull ${NAME}/${APP]-wrk:${VER}
 
 
 build-all: build-db build-api build-wrk
