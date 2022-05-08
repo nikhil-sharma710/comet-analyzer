@@ -11,10 +11,7 @@ ps-me:
 	- docker ps -a | grep ${NAME}
 
 
-list:
-	- docker images | grep ${NAME}
-	- docker ps -a | grep ${NAME} 
-
+list: im-me ps-me
 
 
 build-api:
@@ -29,7 +26,6 @@ build-wrk:
 	docker build -t ${NAME}/${APP}-wrk:${VER} \
                      -f docker/Dockerfile.wrk \
                      ./
-
 
 run-api:
 	RIP=$$(docker inspect ${NAME}-${APP}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
@@ -54,7 +50,6 @@ run-wrk:
                    -d \
                    ${NAME}/${APP}-wrk:${VER}
 
-
 clean-api:
 	- docker stop ${NAME}-${APP}-api && docker rm -f ${NAME}-${APP}-api
 	
@@ -68,22 +63,24 @@ push-api:
 	docker push ${NAME}/${APP}-api:${VER}
 
 push-wrk:
-	docker push ${NAME}/${APP]-wrk:${VER}
-
+	docker push ${NAME}/${APP}-wrk:${VER}
 
 pull-api:
 	docker pull ${NAME}/${APP}-api:${VER}
 
 pull-wrk:
-	docker pull ${NAME}/${APP]-wrk:${VER}
-
+	docker pull ${NAME}/${APP}-wrk:${VER}
 
 build-all: build-db build-api build-wrk
 
+
 run-all: run-db run-api run-wrk
+
 
 clean-all: clean-db clean-api clean-wrk
 
+
 push-all: push-api push-wrk
+
 
 all: clean-all build-all run-all
