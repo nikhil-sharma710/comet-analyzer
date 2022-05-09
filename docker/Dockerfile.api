@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN pip3 install --user Flask==2.0.3
 RUN pip3 install --user redis
-RUN pip3 instlal --user hotqueue
+RUN pip3 install --user hotqueue
 
 COPY ./src/* /app/
 

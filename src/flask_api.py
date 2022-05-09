@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 
 @app.route('/read_data', methods=['POST', 'GET'])
-def read_data_from_file() -> str:
+def read_data_from_file():
     """
     
     """
@@ -35,14 +35,14 @@ def read_data_from_file() -> str:
             comets_data = json.load(f)
 
         for item in comets_data:
-            rd.set(item['object'], json.dumps(item))
+            rd.hset(item['object'], json.dumps(item))
 
         return f'Data has been read from file\n'
 
     elif request.method == 'GET':
         comet_empty_list = []
         for item in rd.keys():
-            comet_empty_list.append(json.loads(rd.get(item).decode('utf-8')))
+            comet_empty_list.append(json.loads(rd.hget(item).decode('utf-8')))
   
         return json.dumps(comet_empty_list, indent=2)
 
@@ -73,7 +73,7 @@ def jobs_api():
         
 
 @app.route('/symbols', methods=['GET'])
-def info() -> str:
+def info():
     """
 
     """
@@ -101,7 +101,7 @@ def info() -> str:
 
 	
 @app.route('/comets', methods=['GET'])
-def get_comets() -> str:
+def get_comets():
     """
 
     """
@@ -110,44 +110,22 @@ def get_comets() -> str:
 
     comets_names = []
     for item in rd.keys():
-        comets_names.append(rd.get(item, 'object')
+        comets_names.append(json.loads(rd.get(item, 'object'))
 
     return json.dumps(comets_names, indent=2)
 
 
-@app.route('/comets/<comet>', methods=['GET'])
-def get_comet_info(comet) -> str:
-    """
 
-    """
-
-    logging.info('Querying route to get all info on /' + comet)
-
-    comet_dict = {}
-    comet_list = []
-    comet_data = ['object', 'epoch_tdb', 'tp_tdb', 'e', 'i_deg', 'w_deg', 'node_deg', 'q_au_1', 'q_au_2', 'p_yr', 'moid_au', 'ref', 'object_name']
-
-    for item in comets_data:
-        if comet == item['object']:
-            comet_desired = item
-            for data in comet_data:
-                comet_dict[data] = comet_desired[data]
-            comet_list.append(comet_dict)
-    return json.dumps(comet_list, indent=2)
-
-
-
-
-@app.route('aphelion/<au>', methods=['GET'])
-def far_comets(au: float):
+@app.route('/aphelion/<au>', methods=['GET'])
+def far_comets(au: int):
     """
     returns comets above some given distance in AU units
     """
 
     aph_list = []
     for item in rd.keys():
-        if float(rd.get(item, 'q_au_2')) >= float(au):
-            aph_list.append('[Object ' + rd.get(item, 'object') + ']: ', rd.get(item, 'q_au_2'))
+        if float(rd.hget(item, 'q_au_2')) >= float(au):
+            aph_list.append('[Object ' + json.loads(rd.hget(item, 'object')) + ']: ', rd.hget(item, 'q_au_2'))
     
     return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
 
