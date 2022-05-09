@@ -3,7 +3,7 @@ APP ?= app
 VER ?= 0.1
 FPORT ?= 5014
 RPORT ?= 6414
-UID ?= 876518
+UID ?= 876850
 GID ?= 816966
 
 im-me:
@@ -40,7 +40,7 @@ run-api:
 run-db:
 	docker run --name ${NAME}-${APP}-db \
 		   -p ${RPORT}:6379 \
-                   -v $(pwd)/data:/data:rw \
+                   -v ${PWD}/data:/data:rw \
                    -d \
                    -u ${UID}:${GID} \
 		   redis:6 \
