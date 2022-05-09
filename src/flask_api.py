@@ -7,12 +7,12 @@ from jobs import rd, q, add_job, get_job_by_id
 
 logging.basicConfig(level=logging.DEBUG)
 
-# redis_ip = os.environ.get('REDIS_IP')
-# if not redis_ip:
+#redis_ip = os.environ.get('REDIS_IP')
+#if not redis_ip:
 #    raise Exception()
 
 app = Flask(__name__)
-# rd = redis.Redis(host=redis_ip, port=6379, db=0)
+#rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
 # comets_data = {}
 
@@ -110,7 +110,7 @@ def get_comets():
 
     comets_names = []
     for item in rd.keys():
-        comets_names.append(json.loads(rd.get(item, 'object'))
+        comets_names.append(json.loads(rd.get(item, 'object')))
 
     return json.dumps(comets_names, indent=2)
 

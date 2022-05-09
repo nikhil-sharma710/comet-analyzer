@@ -1,8 +1,10 @@
 NAME ?= nikhilsharma710
 APP ?= app
 VER ?= 0.1
-FPORT ?= 5029
-RPORT ?= 6429
+FPORT ?= 5014
+RPORT ?= 6414
+UID ?= 876518
+GID ?= 816966
 
 im-me:
 	- docker images | grep ${NAME}
@@ -32,7 +34,7 @@ run-api:
 	docker run -p ${FPORT}:5000 \
                    --name ${NAME}-${APP}-api \
                    -d \
-                   --env REDIS_IP=${RIP} \
+                   --env REDIS_IP=$${RIP} \
                    ${NAME}/${APP}-api:${VER}
 
 run-db:
@@ -40,13 +42,14 @@ run-db:
 		   -p ${RPORT}:6379 \
                    -v $(pwd)/data:/data:rw \
                    -d \
-                   redis:6 \
+                   -u ${UID}:${GID} \
+		   redis:6 \
                    --save 1 1
 
 run-wrk:
 	RIP=$$(docker inspect ${NAME}-${APP}-db | grep \"IPAddress\" | head -n1 | awk -F\" '{print $$4}') && \
 	docker run --name ${NAME}-${APP}-wrk \
-                   --env REDIS_IP=${RIP} \
+                   --env REDIS_IP=$${RIP} \
                    -d \
                    ${NAME}/${APP}-wrk:${VER}
 
