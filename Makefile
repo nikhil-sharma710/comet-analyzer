@@ -1,8 +1,8 @@
 NAME ?= nikhilsharma710
 APP ?= app
 VER ?= 0.1
-FPORT ?= 5014
-RPORT ?= 6414
+FPORT ?= 5029
+RPORT ?= 6429
 UID ?= 876518
 GID ?= 816966
 
