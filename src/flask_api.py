@@ -74,7 +74,7 @@ def jobs_api():
 @app.route('/delete', methods=['DELETE'])
 def delete_unnecessary_info():
     for item in rd.keys():
-        if rd.get(item) != 'q_au_2':
+        if rd.get(item) != 'object' or rd.get(item) != 'q_au_2':
             rd.delete(item)
     return 'All info besides the aphelion (AU) has been deleted\n'        
 
@@ -117,7 +117,7 @@ def get_comets():
 
     comets_names = []
     for item in rd.keys():
-        comets_names.append(rd.get(item, 'object'))
+        comets_names.append(rd.hget(item, 'object'))
 
     return json.dumps(comets_names, indent=2)
 
