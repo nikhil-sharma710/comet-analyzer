@@ -131,8 +131,8 @@ def far_comets(au: int):
 
     aph_list = []
     for item in rd.keys():
-        if float(rd.get(item, 'q_au_2')) >= int(au):
-            aph_list.append('[Object ' + json.loads(rd.get(item, 'object')) + ']: ', rd.get(item, 'q_au_2'))
+        if float(rd.hget(item, 'q_au_2')) >= int(au):
+            aph_list.append('[Object ' + json.loads(rd.hget(item, 'object')) + ']: ', rd.hget(item, 'q_au_2'))
     
     return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
 
