@@ -42,7 +42,7 @@ def read_data_from_file():
     elif request.method == 'GET':
         comet_empty_list = []
         for item in rd.keys():
-            comet_empty_list.append(json.loads(rd.hget(item).decode('utf-8')))
+            comet_empty_list.append(json.loads(rd.get(item).decode('utf-8')))
   
         return json.dumps(comet_empty_list, indent=2)
 
@@ -70,7 +70,14 @@ def jobs_api():
   curl localhost:5041/jobs -X POST -d '{"start":1, "end":2}' -H "Content-Type: application/json"
 """
 
-        
+
+@app.route('/delete', methods=['DELETE'])
+def delete_unnecessary_info():
+    for item in rd.keys():
+        if rd.get(item) != 'q_au_2':
+            rd.delete(item)
+    return 'All info besides the aphelion (AU) has been deleted\n'        
+
 
 @app.route('/symbols', methods=['GET'])
 def info():
@@ -110,7 +117,7 @@ def get_comets():
 
     comets_names = []
     for item in rd.keys():
-        comets_names.append(json.loads(rd.get(item, 'object')))
+        comets_names.append(rd.get(item, 'object'))
 
     return json.dumps(comets_names, indent=2)
 
@@ -124,8 +131,8 @@ def far_comets(au: int):
 
     aph_list = []
     for item in rd.keys():
-        if float(rd.hget(item, 'q_au_2')) >= float(au):
-            aph_list.append('[Object ' + json.loads(rd.hget(item, 'object')) + ']: ', rd.hget(item, 'q_au_2'))
+        if float(rd.get(item, 'q_au_2')) >= float(au):
+            aph_list.append('[Object ' + json.loads(rd.get(item, 'object')) + ']: ', rd.get(item, 'q_au_2'))
     
     return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
 
