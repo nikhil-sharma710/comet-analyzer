@@ -4,6 +4,7 @@ import json
 import redis
 import os
 from jobs import rd, q, add_job, get_job_by_id
+from uuid import uuid4
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -17,7 +18,7 @@ app = Flask(__name__)
 # comets_data = {}
 
 
-@app.route('/read_data', methods=['POST', 'GET'])
+@app.route('/read_data', methods=['POST', 'GET', 'DELETE'])
 def read_data_from_file():
     """
     
@@ -35,20 +36,20 @@ def read_data_from_file():
             comets_data = json.load(f)
 
         for item in comets_data:
-            rd.set(item['object'], json.dumps(item))
+            rd.hset(str(uuid4()), mapping=item)
 
         return f'Data has been loaded to Redis from file\n'
 
     elif request.method == 'GET':
         comet_empty_list = []
         for item in rd.keys():
-            comet_empty_list.append(json.loads(rd.get(item).decode('utf-8')))
-  
+            comet_empty_list.append(rd.hgetall(item))
+
         return json.dumps(comet_empty_list, indent=2)
 
     elif request.method == 'DELETE':
         rd.flushdb()
-        return 'All data in redis container db = 0 has been deleted\n'
+	return 'All data in redis container db = 0 has been deleted\n'
 
 @app.route('/jobs', methods=['POST', 'GET'])
 def jobs_api():
@@ -61,7 +62,7 @@ def jobs_api():
             job = request.get_json(force=True)
         except Exception as e:
             return json.dumps({'status': "Error", 'message': 'Invalid JSON: {}.'.format(e)})
-    
+
         return json.dumps(add_job(job['start'], job['end']), indent=2) + '\n'
 
     elif request.method == 'GET':
@@ -71,12 +72,15 @@ def jobs_api():
 """
 
 
-@app.route('/delete', methods=['DELETE'])
-def delete_unnecessary_info():
-    for item in rd.keys():
-        if rd.get(item) != 'object' or rd.get(item) != 'q_au_2':
-            rd.delete(item)
-    return 'All info besides the aphelion (AU) has been deleted\n'        
+@app.route('/delete/<comet_id>', methods=['DELETE'])
+def delete_unnecessary_info(comet_id):
+    """
+
+    """
+
+    rd.delete(comet_id)
+
+    return 'All info besides the aphelion (AU) has been deleted\n'
 
 
 @app.route('/symbols', methods=['GET'])
@@ -87,7 +91,7 @@ def info():
 
     logging.info('Showing what each symbol means')
 
-    describe = "\n" 
+    describe = "\n"
     describe += "Symbols:    Description:\n"
     describe += "TP          time of perihelion passage, in TDB; this is the time when the comet was closest to the Sun\n"
     describe += "e           the orbital eccentricity of the comet\n"
@@ -106,7 +110,6 @@ def info():
     return describe
 
 
-	
 @app.route('/comets', methods=['GET'])
 def get_comets():
     """
@@ -117,13 +120,32 @@ def get_comets():
 
     comets_names = []
     for item in rd.keys():
-        comets_names.append(rd.hget(item, 'object'))
+        comets_names.append(str(item) + " - " + rd.hget(item, 'object'))
 
     return json.dumps(comets_names, indent=2)
 
 
+@app.route('/comets/<comet_id>', methods=['GET'])
+def get_specific_comet(comet_id):
+    """
 
-@app.route('/aphelion/<au>', methods=['GET'])
+    """
+
+    return json.dumps(rd.hgetall(comet_id), indent=2)
+
+
+@app.route('/update/<comet_id>/<key_value>/<new_value>', methods=['PUT'])
+def update_key_value(comet_id, key_value, new_value):
+    """
+
+    """
+
+    rd.hset(comet_id, key_value, new_value)
+
+    return f'Updated {key_value} to {new_value} in {rd.hget(comet_id, "object")}\n'
+
+
+@app.route('/aphelion/<lower>/<upper>/<bins>', methods=['GET'])
 def far_comets(au: int):
     """
     returns comets above some given distance in AU units
@@ -133,7 +155,7 @@ def far_comets(au: int):
     for item in rd.keys():
         if float(rd.hget(item, 'q_au_2')) >= int(au):
             aph_list.append('[Object ' + json.loads(rd.hget(item, 'object')) + ']: ', rd.hget(item, 'q_au_2'))
-    
+
     return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
 
 
@@ -145,8 +167,6 @@ def testing():
     for item in rd.keys():
         testing_list.append(rd.hgetall(item))
     return json.dumps(testing_list, indent=2)
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
