@@ -1,6 +1,6 @@
 import json
 import os
-import uuid
+from uuid import uuid4
 from flask import Flask, request
 import redis
 from hotqueue import HotQueue
@@ -19,13 +19,15 @@ def _generate_jid():
     """
     Generate a pseudo-random identifier for a job.
     """
-    return str(uuid.uuid4())
+
+    return str(uuid4())
 
 def _generate_job_key(jid):
     """
     Generate the redis key from the job id to be used when storing, retrieving or updating
     a job in the database.
     """
+
     return 'job.{}'.format(jid)
 
 def _instantiate_job(jid, status, start, end):
@@ -33,42 +35,62 @@ def _instantiate_job(jid, status, start, end):
     Create the job object description as a python dictionary. Requires the job id, status,
     start and end parameters.
     """
+
     if type(jid) == str:
-        return {'id': jid,
+        return {
+                'id': jid,
                 'status': status,
-                'start': start,
-                'end': end
+                'min_au': min_au,
+                'max_au': max_au,
+                'num_bins': num_bins
                }
-    return {'id': jid.decode('utf-8'),
+    return {
+            'id': jid.decode('utf-8'),
             'status': status.decode('utf-8'),
-            'start': start.decode('utf-8'),
-            'end': end.decode('utf-8')
+            'min_au': min_au.decode('utf-8'),
+            'max_au': max_au.decode('utf-8'),
+            'num_bins': num_bins.decode('utf-8')
            }
 
 def _save_job(job_key, job_dict):
-    """Save a job object in the Redis database."""
+    """
+    Save a job object in the Redis database.
+    """
+
     jdb.hset(job_key, mapping=job_dict)
     return
 
 def _queue_job(jid):
-    """Add a job to the redis queue."""
+    """
+    Add a job to the redis queue.
+    """
+
     q.put(jid)
     return
 
 def add_job(start, end, status="submitted"):
-    """Add a job to the redis queue."""
+    """
+    Add a job to the redis queue.
+    """
+
     jid = _generate_jid()
-    job_dict = _instantiate_job(jid, status, start, end)
+    job_dict = _instantiate_job(jid, status, min_au, max_au, num_bins)
     _save_job(_generate_job_key(jid), job_dict)
     _queue_job(jid)
     return job_dict
 
 def get_job_by_id(jid):
-    """Return job dictionary given jid"""
+    """
+    Return job dictionary given jid
+    """
+
     return (jdb.hgetall(_generate_job_key(jid).encode('utf-8')))
 
 def update_job_status(jid, status):
-    """Update the status of job with job id `jid` to status `status`."""
+    """
+    Update the status of job with job id `jid` to status `status`.
+    """
+
     job = get_job_by_id(jid)
     if job:
         job['status'] = status
