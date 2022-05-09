@@ -49,7 +49,7 @@ def read_data_from_file():
 
     elif request.method == 'DELETE':
         rd.flushdb()
-	return 'All data in redis container db = 0 has been deleted\n'
+        return 'All data in redis container db = 0 has been deleted\n'
 
 @app.route('/jobs', methods=['POST', 'GET'])
 def jobs_api():
@@ -78,9 +78,11 @@ def delete_unnecessary_info(comet_id):
 
     """
 
+    comet_name = rd.hget(comet_id, "object")
+
     rd.delete(comet_id)
 
-    return 'All info besides the aphelion (AU) has been deleted\n'
+    return f'Deleted {comet_name}\n'
 
 
 @app.route('/symbols', methods=['GET'])
