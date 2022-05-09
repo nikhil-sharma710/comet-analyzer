@@ -35,9 +35,9 @@ def read_data_from_file():
             comets_data = json.load(f)
 
         for item in comets_data:
-            rd.hset(item['object'], json.dumps(item))
+            rd.set(item['object'], json.dumps(item))
 
-        return f'Data has been read from file\n'
+        return f'Data has been loaded to Redis from file\n'
 
     elif request.method == 'GET':
         comet_empty_list = []
