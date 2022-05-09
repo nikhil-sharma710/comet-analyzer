@@ -3,10 +3,10 @@ FROM python:3.9
 RUN mkdir /app/
 WORKDIR /app/ 
 
-RUN pip3 install redis
-RUN pip3 install hotqueue
-RUN pip3 install matplotlib
-RUN pip3 install Flask
+RUN pip3 install redis==4.1.4 \
+                 hotqueue==0.2.8 \
+                 matplotlib==3.3.4 \ 
+                 Flask==2.0.3
 
 COPY ./src/* /app/
 
