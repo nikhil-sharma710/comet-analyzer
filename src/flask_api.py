@@ -63,13 +63,13 @@ def jobs_api():
         except Exception as e:
             return json.dumps({'status': "Error", 'message': 'Invalid JSON: {}.'.format(e)})
 
-        return json.dumps(add_job(job['start'], job['end']), indent=2) + '\n'
+        return json.dumps(add_job(job['min_au'], job['max_au'], job['num_bins']), indent=2) + '\n'
 
     elif request.method == 'GET':
         return """
-  To submit a job, do the following:
-  curl localhost:5041/jobs -X POST -d '{"start":1, "end":2}' -H "Content-Type: application/json"
-"""
+               To submit a job, do the following:
+               curl localhost:5014/jobs/<minimum AU value>/<maximum AU value>/<number of bins> -X POST
+               """
 
 
 @app.route('/delete/<comet_id>', methods=['DELETE'])

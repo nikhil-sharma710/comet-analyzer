@@ -33,7 +33,7 @@ def _generate_job_key(jid):
 def _instantiate_job(jid, status, start, end):
     """
     Create the job object description as a python dictionary. Requires the job id, status,
-    start and end parameters.
+    minimum aphelion, maximum aphelion, and number of bins parameters.
     """
 
     if type(jid) == str:
@@ -98,4 +98,3 @@ def update_job_status(jid, status):
 
     else:
         raise Exception()
-
