@@ -131,7 +131,7 @@ def far_comets(au: int):
 
     aph_list = []
     for item in rd.keys():
-        if float(rd.get(item, 'q_au_2')) >= float(au):
+        if float(rd.get(item, 'q_au_2')) >= int(au):
             aph_list.append('[Object ' + json.loads(rd.get(item, 'object')) + ']: ', rd.get(item, 'q_au_2'))
     
     return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
@@ -141,14 +141,12 @@ def far_comets(au: int):
 @app.route('/test', methods=['GET'])
 def testing():
 
-    needed_data = ['object', 'epoch_tdb', 'tp_tdb', 'e', 'i_deg', 'w_deg', 'node_deg', 'q_au_1', 'q_au_2', 'p_yr', 'moid_au', 'ref', 'object_name']
-    empty_dict = {}
-    for item in comets_data:
-        if 'P/2004 R1 (McNaught)' == item['object']:    
-            for data in needed_data:
-                empty_dict[data] = item[data]
+    testing_list = []
+    for item in rd.keys():
+        testing_list.append(rd.hgetall(item))
+    return json.dumps(testing_list, indent=2)
 
-    return empty_dict
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
