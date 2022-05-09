@@ -8,7 +8,6 @@ RUN pip3 install Flask==2.0.3 \
                  hotqueue==0.2.8
 
 COPY ./src/* /app/
-COPY ./comets_data.json /app/comets_data.json
 
 ENTRYPOINT ["python3"]
 CMD ["flask_api.py"]
