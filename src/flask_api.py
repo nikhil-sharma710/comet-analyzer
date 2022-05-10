@@ -53,23 +53,23 @@ def info():
 
     return """
   Try the following routes:
-  /info                  			GET      informational
-  /read-data             			POST     read data into redis database
-                         			GET      show list of comets data
-                         			DELETE   delete existing data from database
+  /info                  				GET      informational
+  /read-data             				POST     read data into redis database
+                         				GET      show list of comets data
+                         				DELETE   delete existing data from database
 
-  /symbols               			GET      info on what each symbol means
+  /symbols               				GET      info on what each symbol means
 
-  /comets                			GET      display list of comet names and their respective ID's
-  /comets/<comet_id>     			GET      display info about specific comet
-  /delete/<comet_id>     			DELETE   delete data on specific comet
-  /update/<comet_id>/<key_value/<new_value      PUT      update/change a specific piece of info on specific comet
+  /comets                				GET      display list of comet names and their respective ID's
+  /comets/<comet_id>     				GET      display info about specific comet
+  /comets/delete/<comet_id>     			DELETE   delete data on specific comet
+  /comets/update/<comet_id>/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
    
-  /jobs                  			GET      info on how to submit job
-                        			POST     submit job
+  /jobs                  				GET      info on how to submit job
+                        				POST     submit job
 
-  /jobs/<jobid>          			GET      info on job
-  /list-of-jobs          			GET      list of all the jobs
+  /jobs/<jobid>          				GET      info on job
+  /list-of-jobs          				GET      list of all the jobs
 
 
 """
@@ -118,7 +118,7 @@ def get_job_result(job_uuid):
     return json.dumps(get_job_by_id(job_uuid), indent=2) + '\n'
 
 
-@app.route('/delete/<comet_id>', methods=['DELETE'])
+@app.route('/comets/delete/<comet_id>', methods=['DELETE'])
 def delete_specific_comet(comet_id):
     """
 
@@ -182,7 +182,7 @@ def get_specific_comet(comet_id):
     return json.dumps(rd.hgetall(comet_id), indent=2)
 
 
-@app.route('/update/<comet_id>/<key_value>/<new_value>', methods=['PUT'])
+@app.route('/comets/update/<comet_id>/<key_value>/<new_value>', methods=['PUT'])
 def update_key_value(comet_id, key_value, new_value):
     """
 
