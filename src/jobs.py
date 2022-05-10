@@ -30,7 +30,7 @@ def _generate_job_key(jid):
 
     return 'job.{}'.format(jid)
 
-def _instantiate_job(jid, status, start, end):
+def _instantiate_job(jid, status, min_au, max_au, num_bins):
     """
     Create the job object description as a python dictionary. Requires the job id, status,
     minimum aphelion, maximum aphelion, and number of bins parameters.
@@ -68,7 +68,7 @@ def _queue_job(jid):
     q.put(jid)
     return
 
-def add_job(start, end, status="submitted"):
+def add_job(min_au, max_au, num_bins, status="finished"):
     """
     Add a job to the redis queue.
     """
