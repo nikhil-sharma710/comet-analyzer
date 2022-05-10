@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 import logging
 import json
 import redis
 import os
-from jobs import rd, q, add_job, get_job_by_id, jdb
+from jobs import rd, q, add_job, get_job_by_id, jdb, hdb
 from uuid import uuid4
 
 logging.basicConfig(level=logging.DEBUG)
@@ -116,6 +116,14 @@ def get_job_result(job_uuid):
     """
 
     return json.dumps(get_job_by_id(job_uuid), indent=2) + '\n'
+
+
+@app.route('/download/<jobid>', methods=['GET'])
+def download(jobid):
+    path = f'/app/{jobid}.png'
+    with open(path, 'wb') as f:
+        f.write(hdb.get(jobid))
+    return send_file(path, mimetype='image/png', as_attachment=True)
 
 
 @app.route('/comets/delete/<comet_id>', methods=['DELETE'])

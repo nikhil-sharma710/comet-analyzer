@@ -1,25 +1,18 @@
-from jobs import rd, q, add_job, get_job_by_id, jdb
+from jobs import rd, q, jdb, hdb, add_job, get_job_by_id, update_job_status
 import time
-import matplotlib as plt
-import numpy as np
-import redis
+import matplotlib.pyplot as plt
 import os
-
-redis_ip = os.environ.get('REDIS_IP')
-if not redis_ip:
-    raise Exception()
-
-hdb = redis.StrictRedis(host=redis_ip, port=6379, db=3)
 
 @q.worker
 def execute_job(jid):
     update_job_status(jid, 'started')
+    time.sleep(5)
 
-    data = jdb.hgetall(jid)
+    data = jdb.hgetall(f'job.{jid}')
 
     min_au_value = data['min_au']
     max_au_value = data['max_au']
-    n = data['num_bins']
+    n = int(data['num_bins'])
 
     list_of_values = []
 
@@ -29,16 +22,16 @@ def execute_job(jid):
 
     plt.hist(list_of_values, n)
     plt.xlabel('Aphelion Distance, in AU')
+    plt.xlim(min_au_value, max_au_value)
     plt.ylabel('Frequency')
+    plt.ylim(0, 50)
     plt.title('Histogram of Aphelion Distance')
     plt.savefig('histogram.png')
-    plt.show()
  
-    file_bytes = open('/tmp/histogram.png', 'rb').read()
+    file_bytes = open('histogram.png', 'rb').read()
 
-    hdb.set('key', file_bytes)
+    hdb.set(jid, file_bytes)
 
-    time.sleep(15)
     update_job_status(jid, 'finished')
 
 execute_job()

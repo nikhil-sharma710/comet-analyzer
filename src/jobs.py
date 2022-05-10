@@ -13,7 +13,7 @@ if not redis_ip:
 rd = redis.Redis(host=redis_ip, port=6379, db=0, decode_responses=True)
 q = HotQueue("queue", host=redis_ip, port=6379, db=1)
 jdb = redis.Redis(host=redis_ip, port=6379, db=2, decode_responses=True)
-
+hdb = redis.Redis(host=redis_ip, port=6379, db=3)
 
 def _generate_jid():
     """
@@ -68,7 +68,7 @@ def _queue_job(jid):
     q.put(jid)
     return
 
-def add_job(min_au, max_au, num_bins, status="finished"):
+def add_job(min_au, max_au, num_bins, status='submitted'):
     """
     Add a job to the redis queue.
     """

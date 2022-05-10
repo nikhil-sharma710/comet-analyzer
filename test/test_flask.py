@@ -13,7 +13,7 @@ api_prefix = f'http://{api_host}:{api_port}'
 
 
 def test_info():
-    route = f'{api_prefix}/'
+    route = f'{api_prefix}/info'
     response = requests.get(route)
 
     assert response.ok == True
@@ -22,7 +22,7 @@ def test_info():
 
 
 def test_read_data_from_file():
-    route = f'{api_prefix}/data'
+    route = f'{api_prefix}/read-data'
     response = requests.post(route)
 
     assert response.ok == True
@@ -70,15 +70,15 @@ def test_jobs_cycle():
     assert response.ok == True
     assert response.status_code == 200
     
-        jid = response.json()['id']
+    UUID = response.json()['id']
     assert isinstance(UUID, str) == True
-    assert response.json()['status'] == 'min_aued'
+    assert response.json()['status'] == 'submitted'
     assert int(response.json()['min_au']) == int(job_data['min_au'])
     assert int(response.json()['max_au']) == int(job_data['max_au'])
     assert int(response.json()['num_bins']) == int(job_data['num_bins'])
 
     time.sleep(1)
-    route = f'{api_prefix}/jobs/{jid}'
+    route = f'{api_prefix}/jobs/{UUID}'
     response = requests.get(route)
 
     assert response.ok == True
@@ -89,8 +89,8 @@ def test_jobs_cycle():
     assert int(response.json()['max_au']) == int(job_data['max_au'])
     assert int(response.json()['num_bins']) == int(job_data['num_bins'])
 
-    time.sleep(15)
-    route = f'{api_prefix}/jobs/{jid}'
+    time.sleep(10)
+    route = f'{api_prefix}/jobs/{UUID}'
     response = requests.get(route)
 
     assert response.ok == True
