@@ -3,22 +3,14 @@ import logging
 import json
 import redis
 import os
-from jobs import rd, q, add_job, get_job_by_id
+from jobs import rd, q, add_job, get_job_by_id, jdb
 from uuid import uuid4
 
 logging.basicConfig(level=logging.DEBUG)
 
-#redis_ip = os.environ.get('REDIS_IP')
-#if not redis_ip:
-#    raise Exception()
-
 app = Flask(__name__)
-#rd = redis.Redis(host=redis_ip, port=6379, db=0)
 
-# comets_data = {}
-
-
-@app.route('/read_data', methods=['POST', 'GET', 'DELETE'])
+@app.route('/read-data', methods=['POST', 'GET', 'DELETE'])
 def read_data_from_file():
     """
     
@@ -67,9 +59,32 @@ def jobs_api():
 
     elif request.method == 'GET':
         return """
-               To submit a job, do the following:
-               curl localhost:5014/jobs/<minimum AU value>/<maximum AU value>/<number of bins> -X POST
-               """
+  To submit a job, do the following:
+  curl localhost:5014/jobs -X POST -d '{"min_au": "<minimum AU value>", "max_au": "<maximum AU value>", "num_bins": "<number of bins>"}' -H "Content-Type: application/json"
+
+"""
+
+@app.route('/list-of-jobs', methods=['GET'])
+def get_list_of_jobs():
+    """
+
+    """
+
+    logging.info('Querying route to get all comets')
+
+    job_list = []
+    for item in jdb.keys():
+        job_list.append(jdb.hgetall(item))
+
+    return json.dumps(job_list, indent=2)
+
+@app.route('/jobs/<job_uuid>', methods=['GET'])
+def get_job_result(job_uuid):
+    """
+    API route for checking on the status of a submitted job
+    """
+
+    return json.dumps(get_job_by_id(job_uuid), indent=2) + '\n'
 
 
 @app.route('/delete/<comet_id>', methods=['DELETE'])
