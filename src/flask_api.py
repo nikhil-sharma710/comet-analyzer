@@ -43,6 +43,37 @@ def read_data_from_file():
         rd.flushdb()
         return 'All data in redis container db = 0 has been deleted\n'
 
+
+@app.route('/info', methods=['GET'])
+def info():
+
+    """
+    Informational
+    """
+
+    return """
+  Try the following routes:
+  /info                  			GET      informational
+  /read-data             			POST     read data into redis database
+                         			GET      show list of comets data
+                         			DELETE   delete existing data from database
+
+  /symbols               			GET      info on what each symbol means
+
+  /comets                			GET      display list of comet names and their respective ID's
+  /comets/<comet_id>     			GET      display info about specific comet
+  /delete/<comet_id>     			DELETE   delete data on specific comet
+  /update/<comet_id>/<key_value/<new_value      PUT      update/change a specific piece of info on specific comet
+   
+  /jobs                  			GET      info on how to submit job
+                        			POST     submit job
+
+  /jobs/<jobid>          			GET      info on job
+  /list-of-jobs          			GET      list of all the jobs
+
+
+"""
+
 @app.route('/jobs', methods=['POST', 'GET'])
 def jobs_api():
     """
@@ -88,7 +119,7 @@ def get_job_result(job_uuid):
 
 
 @app.route('/delete/<comet_id>', methods=['DELETE'])
-def delete_unnecessary_info(comet_id):
+def delete_specific_comet(comet_id):
     """
 
     """
@@ -101,7 +132,7 @@ def delete_unnecessary_info(comet_id):
 
 
 @app.route('/symbols', methods=['GET'])
-def info():
+def get_symbols():
     """
 
     """
@@ -162,28 +193,7 @@ def update_key_value(comet_id, key_value, new_value):
     return f'Updated {key_value} to {new_value} in {rd.hget(comet_id, "object")}\n'
 
 
-@app.route('/aphelion/<lower>/<upper>/<bins>', methods=['GET'])
-def far_comets(au: int):
-    """
-    returns comets above some given distance in AU units
-    """
 
-    aph_list = []
-    for item in rd.keys():
-        if float(rd.hget(item, 'q_au_2')) >= int(au):
-            aph_list.append('[Object ' + json.loads(rd.hget(item, 'object')) + ']: ', rd.hget(item, 'q_au_2'))
-
-    return(f'Comets having distance greater than {au}\n' + json.dumps(aph_list, indent=2) + '\n')
-
-
-
-@app.route('/test', methods=['GET'])
-def testing():
-
-    testing_list = []
-    for item in rd.keys():
-        testing_list.append(rd.hgetall(item))
-    return json.dumps(testing_list, indent=2)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
