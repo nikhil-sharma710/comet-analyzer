@@ -162,3 +162,8 @@ curl localhost:5014/download/<jobid> > output.png
 ```
 
 The image will be saved as a PNG file, and the histogram can be viewed in the repository.
+
+
+## Data Citations
+
+NASA. “Near-Earth Comets - Orbital Elements.” 2 Apr. 2015, [https://data.nasa.gov/Space-Science/Near-Earth-Comets-Orbital-Elements/b67r-rgxc](https://data.nasa.gov/Space-Science/Near-Earth-Comets-Orbital-Elements/b67r-rgxc). Accessed 11 May 2022. 
