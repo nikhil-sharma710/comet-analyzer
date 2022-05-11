@@ -22,7 +22,7 @@ def execute_job(jid):
 
     plt.hist(list_of_values, n)
     plt.xlabel('Aphelion Distance, in AU')
-    plt.xlim(min_au_value, max_au_value)
+    plt.xlim(int(min_au_value), int(max_au_value))
     plt.ylabel('Frequency')
     plt.ylim(0, 50)
     plt.title('Histogram of Aphelion Distance')
