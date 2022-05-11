@@ -144,7 +144,7 @@ For `minimum AU value` and `maximum AU value`, look at the data to see what valu
 To download the histogram image, use the following command:
 
 ```
-curl localhost:5014/download/38da6a5e-de13-4dba-a3dd-1c5be239dd60 > output.png
+curl localhost:5014/download/<jobid> > output.png
 ```
 
 The image will be saved as a PNG file, and the histogram can be viewed in the repository.
