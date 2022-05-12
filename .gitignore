@@ -1,2 +1,5 @@
 data/
-Makefile
+test/__pycache__/
+.gitignore
+output.png
+comets_data.json
