@@ -142,6 +142,17 @@ def delete_specific_comet(comet_id):
     return f'Deleted {comet_name}\n'
 
 
+#added this quote last minute but cannot test due to redis 
+@app.route('/comets/create/<comet_name>/<q_au_2>', methods=['POST'])
+def create_comet(comet_name, q_au_2):
+    """
+    Creates a new comet with an aphelion value
+    """
+
+    rd.hset(str(uuid4()), mapping={"object": comet_name, "q_au_2": q_au_2})
+    return f'A new comet named {comet_name} with a {q_au_2} AU aphelion has been created.\n'
+
+
 @app.route('/info/symbols', methods=['GET'])
 def get_symbols():
     """
