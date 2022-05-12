@@ -62,8 +62,8 @@ def info():
 
   /comets                                               GET      display list of comet names and their respective ID's
   /comets/<comet_id>                                    GET      display info about specific comet
-  /comets/delete/<comet_id>                             DELETE   delete data on specific comet
-  /comets/update/<comet_id>/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
+  /comets/<comet_id>/delete                             DELETE   delete data on specific comet
+  /comets/<comet_id>/update/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
    
   /jobs                                                 GET      info on how to submit job
                                                         POST     submit job
@@ -119,13 +119,17 @@ def get_job_result(job_uuid):
 
 @app.route('/download/<jobid>', methods=['GET'])
 def download(jobid):
+
+    """
+    Downloads specific png of histogram of specific job
+    """
     path = f'/app/{jobid}.png'
     with open(path, 'wb') as f:
         f.write(hdb.get(jobid))
     return send_file(path, mimetype='image/png', as_attachment=True)
 
 
-@app.route('/comets/delete/<comet_id>', methods=['DELETE'])
+@app.route('/comets/<comet_id>/delete', methods=['DELETE'])
 def delete_specific_comet(comet_id):
     """
     Deletes a specific comet.
@@ -189,7 +193,7 @@ def get_specific_comet(comet_id):
     return json.dumps(rd.hgetall(comet_id), indent=2)
 
 
-@app.route('/comets/update/<comet_id>/<key_value>/<new_value>', methods=['PUT'])
+@app.route('/comets/<comet_id>/put/<key_value>/<new_value>', methods=['PUT'])
 def update_key_value(comet_id, key_value, new_value):
     """
     Updates information in specific comet dictionary.
