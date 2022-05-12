@@ -10,24 +10,22 @@ def execute_job(jid):
 
     data = jdb.hgetall(f'job.{jid}')
 
-    min_au_value = data['min_au']
-    max_au_value = data['max_au']
+    min_au_value = float(data['min_au'])
+    max_au_value = float(data['max_au'])
     n = int(data['num_bins'])
 
     list_of_values = []
 
     for item in rd.keys():
-        if rd.hget(item, 'q_au_2') >= min_au_value and rd.hget(item, 'q_au_2') <= max_au_value:
+        if float(rd.hget(item, 'q_au_2')) >= min_au_value and float(rd.hget(item, 'q_au_2')) <= max_au_value:
             list_of_values.append(rd.hget(item, 'q_au_2'))
 
     plt.hist(list_of_values, n)
     plt.xlabel('Aphelion Distance, in AU')
-    plt.xlim(int(min_au_value), int(max_au_value))
     plt.ylabel('Frequency')
-    plt.ylim(0, 50)
     plt.title('Histogram of Aphelion Distance')
     plt.savefig('histogram.png')
- 
+
     file_bytes = open('histogram.png', 'rb').read()
 
     hdb.set(jid, file_bytes)
