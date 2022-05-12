@@ -18,7 +18,7 @@ spec:
       containers:
         - name: app-prod-wrk
           imagePullPolicy: Always
-          image: nikhilsharma710/app-wrk:1.0
+          image: nikhilsharma710/app-wrk:0.1
           command: ['python3', 'worker.py']
           env:
           - name: REDIS_IP

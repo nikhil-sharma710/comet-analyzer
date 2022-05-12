@@ -4,7 +4,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: app-data
   labels:
-    username: app
     env: prod
 spec:
   accessModes:

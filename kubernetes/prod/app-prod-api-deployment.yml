@@ -19,7 +19,7 @@ spec:
       containers:
         - name: app-prod-api
           imagePullPolicy: Always
-          image: nikhilsharma710/app-api:1.0
+          image: nikhilsharma710/app-api:0.1
           command: ['python3', 'flask_api.py']
           env:
           - name: REDIS_IP
