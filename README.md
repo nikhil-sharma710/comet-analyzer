@@ -145,6 +145,32 @@ Here are the routes that the user may curl:
 
 For routes that do not use the `GET` method (`POST`, `PUT`, or `DELETE`), `-X <method type>` must be included after the route.
 
+### Performing CRUD Operations:
+
+#### Create (`POST`) a comet with a specific aphelion value in AU:
+```
+$ curl localhost:<flaskport>/comets/create/<comet_name>/<q_au_2> -X POST
+```
+This command will create a new comet with a given name and aphelion value by the user.
+
+#### Read (`GET`) data out of database:
+```
+$ curl localhost:<flaskport>/comets/<comet_id>
+```
+This route returns information about a specific comet.
+
+#### Update (`PUT`) specific info in dataset:
+```
+$ curl localhost:<flaskport>/comets/<comet_id>/key_value/new_key -X PUT
+```
+This route updates/changes a piece of info on a comet.
+
+#### Remove (`DELETE`) existing data from database:
+```
+$ curl localhost:<flaskport>/comets/<comet_id>/delete -X DELETE
+```
+This route deletes a comet and all its info from the database.
+
 #### Step 2: Submit a Job and Download Histogram Image
 
 To submit a job, use the `/jobs` route listed above. After typing the route into the command line, the variable values for job must be added. The whole command should look as follows:
