@@ -1,6 +1,6 @@
 # Final Project: Creating a REST API to Analyze Near-Earth Comets
 
-We live in a universe that holds billions of particles, planets, asteroids, comets, galaxies… Uncertainty lies amongst not only the planet Earth but also in space. The objective of this project was to create a REST API front-end to a time series data set, near-earth comets, that allows for basic CRUD - Create, Read, Update, Delete - operations and for users to submit analysis jobs. Our application supports on the back-end an analysis job to create a plot of comets within a certain aphelion (farthest distance from sun) range. For others to access and interact with our API, we will have hosted it on the Kubernetes cluster. This project utilizes Python 3, Flask, Docker, and Redis. 
+We live in a universe that holds billions of particles, planets, asteroids, stars, comets… and there lies uncertainty all across space - have you ever seen a shooting star or a comet? The objective of this project was to create a REST API front-end to a time series data set, near-earth comets, that allows for basic CRUD - Create, Read, Update, Delete - operations and for users to submit analysis jobs. Our application supports on the back-end an analysis job to create a plot of comets within a certain aphelion (farthest distance from sun) range. For others to access and interact with our API, we will have hosted it on the Kubernetes cluster. This project utilizes Python 3, Flask, Docker, and Redis. 
 
 
 ## Contents
