@@ -63,6 +63,7 @@ def info():
   /comets                                               GET      display list of comet names and their respective ID's
   /comets/<comet_id>                                    GET      display info about specific comet
   /comets/<comet_id>/delete                             DELETE   delete data on specific comet
+  /comets/create/<comet_name>/<q_au_2>                  POST     create comet with name and specific aphelion value in AU 
   /comets/<comet_id>/update/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
    
   /jobs                                                 GET      info on how to submit job
