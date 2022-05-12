@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route('/read-data', methods=['POST', 'GET', 'DELETE'])
 def read_data_from_file():
     """
-    
+    Loads data from file into database, returns a list of dictionaries of comets, or deletes data in database, depending on method.
     """
 
     logging.info('Reading data...')
@@ -38,7 +38,7 @@ def read_data_from_file():
             comet_empty_list.append(rd.hgetall(item))
 
         return json.dumps(comet_empty_list, indent=2)
-
+    
     elif request.method == 'DELETE':
         rd.flushdb()
         return 'All data in redis container db = 0 has been deleted\n'
@@ -48,33 +48,32 @@ def read_data_from_file():
 def info():
 
     """
-    Informational
+    Provides information on how to interact with the application.
     """
 
     return """
   Try the following routes:
-  /info                  				GET      informational
-  /read-data             				POST     read data into redis database
-                         				GET      show list of comets data
-                         				DELETE   delete existing data from database
+  /info                                                 GET      informational
+  /read-data                                            POST     read data into redis database
+                                                        GET      show list of comets data
+                                                        DELETE   delete existing data from database
 
-  /symbols               				GET      info on what each symbol means
+  /symbols                                              GET      info on what each symbol means
 
-  /comets                				GET      display list of comet names and their respective ID's
-  /comets/<comet_id>     				GET      display info about specific comet
-  /comets/delete/<comet_id>     			DELETE   delete data on specific comet
-  /comets/update/<comet_id>/<key_value>/<new_value>     PUT      update/change a specific piece of info on specific comet
+  /comets                                               GET      display list of comet names and their respective ID's
+  /comets/<comet_id>                                    GET      display info about specific comet
+  /comets/delete/<comet_id>                             DELETE   delete data on specific comet
+  /comets/update/<comet_id>/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
    
-  /jobs                  				GET      info on how to submit job
-                        				POST     submit job
+  /jobs                                                 GET      info on how to submit job
+                                                        POST     submit job
 
-  /jobs/<jobid>          				GET      info on job
-  /list-of-jobs          				GET      list of all the jobs
-  /download/<jid>					GET	 download picture of histogram
+  /jobs/<jobid>                                         GET      info on job
+  /list-of-jobs                                         GET      list of all the jobs
+
 
 """
 
-@app.route('/jobs', methods=['POST', 'GET'])
 def jobs_api():
     """
     API route for creating a new job to do some analysis. This route accepts a JSON payload
@@ -98,7 +97,7 @@ def jobs_api():
 @app.route('/list-of-jobs', methods=['GET'])
 def get_list_of_jobs():
     """
-
+    Returns a list of jobs - submitted, started, or finished.
     """
 
     logging.info('Querying route to get all comets')
@@ -129,7 +128,7 @@ def download(jobid):
 @app.route('/comets/delete/<comet_id>', methods=['DELETE'])
 def delete_specific_comet(comet_id):
     """
-
+    Deletes a specific comet.
     """
 
     comet_name = rd.hget(comet_id, "object")
@@ -142,7 +141,7 @@ def delete_specific_comet(comet_id):
 @app.route('/symbols', methods=['GET'])
 def get_symbols():
     """
-
+    Returns the meaning of each key in a dictionary.
     """
 
     logging.info('Showing what each symbol means')
@@ -169,7 +168,7 @@ def get_symbols():
 @app.route('/comets', methods=['GET'])
 def get_comets():
     """
-
+    Resturns a list of comets and their IDs.
     """
 
     logging.info('Querying route to get all comets')
@@ -184,7 +183,7 @@ def get_comets():
 @app.route('/comets/<comet_id>', methods=['GET'])
 def get_specific_comet(comet_id):
     """
-
+    Returns information about a specific comet.
     """
 
     return json.dumps(rd.hgetall(comet_id), indent=2)
@@ -193,7 +192,7 @@ def get_specific_comet(comet_id):
 @app.route('/comets/update/<comet_id>/<key_value>/<new_value>', methods=['PUT'])
 def update_key_value(comet_id, key_value, new_value):
     """
-
+    Updates information in specific comet dictionary.
     """
 
     rd.hset(comet_id, key_value, new_value)
@@ -205,3 +204,4 @@ def update_key_value(comet_id, key_value, new_value):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+                                                                                                                                         80,1          23%
