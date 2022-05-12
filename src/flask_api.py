@@ -58,7 +58,7 @@ def info():
                                                         GET      show list of comets data
                                                         DELETE   delete existing data from database
 
-  /symbols                                              GET      info on what each symbol means
+  /info/symbols                                              GET      info on what each symbol means
 
   /comets                                               GET      display list of comet names and their respective ID's
   /comets/<comet_id>                                    GET      display info about specific comet
@@ -142,7 +142,7 @@ def delete_specific_comet(comet_id):
     return f'Deleted {comet_name}\n'
 
 
-@app.route('/symbols', methods=['GET'])
+@app.route('/info/symbols', methods=['GET'])
 def get_symbols():
     """
     Returns the meaning of each key in a dictionary.
