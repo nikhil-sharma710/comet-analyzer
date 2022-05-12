@@ -38,7 +38,7 @@ def read_data_from_file():
             comet_empty_list.append(rd.hgetall(item))
 
         return json.dumps(comet_empty_list, indent=2)
-    
+
     elif request.method == 'DELETE':
         rd.flushdb()
         return 'All data in redis container db = 0 has been deleted\n'
