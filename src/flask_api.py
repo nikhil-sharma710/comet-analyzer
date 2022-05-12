@@ -63,14 +63,14 @@ def info():
   /comets                				GET      display list of comet names and their respective ID's
   /comets/<comet_id>     				GET      display info about specific comet
   /comets/delete/<comet_id>     			DELETE   delete data on specific comet
-  /comets/update/<comet_id>/<key_value/<new_value       PUT      update/change a specific piece of info on specific comet
+  /comets/update/<comet_id>/<key_value>/<new_value>     PUT      update/change a specific piece of info on specific comet
    
   /jobs                  				GET      info on how to submit job
                         				POST     submit job
 
   /jobs/<jobid>          				GET      info on job
   /list-of-jobs          				GET      list of all the jobs
-
+  /download/<jid>					GET	 download picture of histogram
 
 """
 
