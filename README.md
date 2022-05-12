@@ -153,7 +153,7 @@ To submit a job, use the `/jobs` route listed above. After typing the route into
 $ curl localhost:5014/jobs -d ‘{“min_au”: “<minimum AU value>”, “max_au”: “<maximum AU value>”, “num_bins”, “<number of bins>”}’ -H “Content-Type: application/json”
 ```
 
-For `minimum AU value` and `maximum AU value`, look at the data to see what values would be appropriate for these inputs. and `<number of bins>`, 
+For `minimum AU value` and `maximum AU value`, look at the data to see what values would be appropriate for these inputs and `<number of bins>`, 
 
 To download the histogram image, use the following command:
 
@@ -163,6 +163,41 @@ curl localhost:5014/download/<jobid> > output.png
 
 The image will be saved as a PNG file, and the histogram can be viewed in the repository.
 
+## Deploying in Kubernetes
+
+#### Step 1: Log into isp -> log into k8s
+```
+$ ssh <username>@coe332-k8s.tacc.cloud
+```
+#### Step 2: Acquire `.yml` Files from Repo into k8s
+
+#### Step 3: Apply all the `.yml` files and make sure to do it in this order:
+
+```
+$ kubectl apply -f app-prod-db-service.yml
+$ kubectl apply -f app-prod-db-pvc.yml
+$ kubectl apply -f app-prod-db-deployment.yml
+$ kubectl apply -f app-prod-api-service.yml
+$ kubectl apply -f app-prod-api-deployment.yml
+$ kubectl apply -f app-prod-wrk-deployment.yml
+```
+#### Step 4: Make Sure Pods are Up and Running
+```
+kubectl get all -o wide
+```
+
+#### Step 5: Find the IP Address Container is Using for Flask
+
+```
+$ kubectl describe service <container name>
+```
+
+#### Step 6: Exec into a Container to Curl the Route using the IP address
+
+```
+$ kubectl exec -it <pod name> -- /bin/bash
+$ curl <ip_address>:5000/read-data -X POST
+```
 
 ## Data Citations
 
