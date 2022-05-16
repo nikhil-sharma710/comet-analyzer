@@ -75,6 +75,7 @@ def info():
 
 """
 
+@app.route('/jobs', methods=['GET', 'POST'])
 def jobs_api():
     """
     API route for creating a new job to do some analysis. This route accepts a JSON payload
